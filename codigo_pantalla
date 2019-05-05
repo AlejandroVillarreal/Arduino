@@ -1,0 +1,21 @@
+#include "U8glib.h"
+
+
+U8GLIB_ST7920_128X64_1X u8g(52, 51, 53, U8G_PIN_NONE); 
+void setup(void) {} 
+ 
+ void loop(void) { 
+ // bucle de pintado 
+ u8g.firstPage(); 
+ do { 
+   u8g.setFont(u8g_font_unifont);
+  //u8g.setFont(u8g_font_osb21);
+  u8g.drawStr( 5, 10, "Equipo");
+
+ 
+ 
+ } while( u8g.nextPage() ); 
+ 
+ // esperamos un segundo antes de volver a pintar en la pantalla. 
+ delay(10); 
+ }
