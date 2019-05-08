@@ -1,0 +1,502 @@
+#include <Keypad.h>
+#include <U8glib.h>
+
+//------DEFINIR PUERTOS LCD------/
+U8GLIB_ST7920_128X64_1X u8g(52, 51, 53, U8G_PIN_NONE);
+
+
+//-----DEFINIR CONSTANTES DEL TECLADO-----/
+const byte Fila = 4;
+const byte Columna = 4;
+
+char keys[Fila][Columna] = {
+  {'1', '2', '3', 'A'},
+  {'4', '5', '6', 'B'},
+  {'7', '8', '9', 'C'},
+  {'*', '0', '#', 'D'}
+};
+byte FilaPins[Fila] = {5, 4, 3, 2};
+byte ColumnaPins[Columna] = {8, 7, 6, 9};
+
+//----------INICIAR EL TECLADO----------/
+Keypad keypad = Keypad( makeKeymap(keys), FilaPins, ColumnaPins, Fila, Columna );
+
+//----DECLARACION VARIABLE contador---/
+int contador;
+char numProblema;
+//----------FUNCION PREPARAR EL LCD----------/
+void u8g_prepare(void) {
+  u8g.setFont(u8g_font_5x7);
+  u8g.setFontRefHeightExtendedText();
+  u8g.setDefaultForegroundColor();
+  u8g.setFontPosTop();
+}
+
+
+
+//===============================INICIO DE SETUP===================================/
+void setup() {
+  Serial.begin(9600);
+  u8g_prepare();
+    u8g.firstPage();
+  do {
+  menuPrincipal();
+  }while(u8g.nextPage());
+  
+  }
+
+void loop() {
+ 
+ char keyMenu = keypad.getKey(); //VARIABLE keyMenu CONTROLA EL MENU//
+ 
+// //====================================================================================================================================================================================================
+//  //=================MENU SELECCION U.TEMATICA I===============//
+
+
+if (keyMenu == 'A' && contador==0){
+  u8g.firstPage();
+  do {
+  menuUnidadTematica1();
+
+  contador='A';
+  }
+  while (u8g.nextPage());
+  
+}
+
+if (keyMenu == '1' && contador=='A'){
+  u8g.firstPage();
+  do {
+ problemaInterLi ();
+
+  contador='1';
+  }
+  while (u8g.nextPage());
+
+  
+}
+if (keyMenu == 'A' && contador=='1'){
+  u8g.firstPage();
+  do {
+ Verdadero ();
+
+  contador='1';
+  }
+  while (u8g.nextPage());
+
+  
+}
+if (keyMenu == 'B' && contador=='1'){
+  u8g.firstPage();
+  do {
+ Falso ();
+
+  contador='1';
+  }
+  while (u8g.nextPage());
+
+ 
+}
+if (keyMenu =='2' && contador=='A'){
+  u8g.firstPage();
+  do {
+    NewtonAdelante();
+    contador='2';
+  }
+  while (u8g.nextPage());
+}
+if (keyMenu =='A' && contador=='2'){
+  u8g.firstPage();
+  do {
+    Falso();
+    contador='2';
+  }
+  while (u8g.nextPage());
+}
+if (keyMenu =='B' && contador=='2'){
+  u8g.firstPage();
+  do {
+    Verdadero();
+    contador='2';
+  }while(u8g.nextPage());
+}
+
+if (keyMenu=='3' && contador=='A'){
+  u8g.firstPage();
+  do{
+    NewtonAtras();
+    contador='3';
+  }while(u8g.nextPage());
+}
+if (keyMenu=='A' && contador=='3'){
+  u8g.firstPage();
+  do{
+    Falso();
+    contador='3';
+  }while(u8g.nextPage());
+}
+if (keyMenu=='B' && contador=='3'){
+  u8g.firstPage();
+  do {
+    Verdadero();
+    contador='3';
+  }while(u8g.nextPage());
+}
+//  //=================MENU SELECCION U.TEMATICA II===============//
+ 
+
+
+if (keyMenu == 'B' && contador==0){
+  u8g.firstPage();
+  do {
+  menuUnidadTematica2();
+
+  contador='B';
+  }
+  while (u8g.nextPage());
+}
+
+
+//  //=================MENU SELECCION U.TEMATICA III===============//
+ 
+
+
+if (keyMenu == 'C' && contador==0){
+  u8g.firstPage();
+  do {
+  menuUnidadTematica3();
+
+  contador='C';
+  }
+  while (u8g.nextPage());
+}
+
+ //  //=================MENU SELECCION U.TEMATICA IV===============//
+ 
+
+
+if (keyMenu == 'D' && contador==0){
+  u8g.firstPage();
+  do {
+  menuUnidadTematica4();
+
+  contador='D';
+  }
+  while (u8g.nextPage());
+}
+
+
+
+ // ==================REGRESAR AL MENU DE UNIDAD TEMATICA ==================//
+if (keyMenu == '*') 
+{
+  u8g.firstPage();
+  do {
+  menuPrincipal();
+  contador =0;
+  }while (u8g.nextPage());
+ 
+
+}
+
+Serial.println(keyMenu);
+Serial.println(contador);
+delay(100);
+
+}
+
+
+//==========================================================INFORMACION DE LAS PANTALLAS===================================================================================================//
+void menuPrincipal(){
+  u8g.drawStr(5,0,"A)Unidad Tematica I");
+  u8g.drawStr(5,10,"B)Unidad Tematica II");
+  u8g.drawStr(5,20,"C)Unidad Tematica III");
+  u8g.drawStr(5,30,"D)Unidad Tematica IV");
+}
+
+ //==========================================================UNIDAD NUMERO 1===================================================================================================//
+    void menuUnidadTematica1(){
+      u8g.drawStr(5,0,"1)Interpolacion Lineal");
+      u8g.drawStr(5,10,"2)Newton hacia Adelante");
+      u8g.drawStr(5,20,"3)Newton hacia Atras");
+      u8g.drawStr(5,30,"4)Newton con");
+      u8g.drawStr(5,40," Dif. Divididas");
+      u8g.drawStr(5,50,"5)Lagrange");
+    }
+      //==========================================SECCION NUMERO 1(INTERPOLACCION)=====================================================================================================//
+      
+  //==========================================PROBLEMA NUMERO(1.1INTER POLACCION LINEAL)1==================================================================================================//
+             void problemaInterLi(){
+              u8g.drawStr(5,0,"Es aquel metodo que ");
+               u8g.drawStr(5,8,"consiste en unir");
+              u8g.drawStr(5,18," 2 puntos en una ");
+                u8g.drawStr(5,28," linea");
+              u8g.drawStr(5,38,"A)Interpolacion Lineal");
+              u8g.drawStr(5,48,"B)La Grange");
+            }
+ //==========================================PROBLEMA NUMERO(.1.1INTER POLACCION LINEAL)2==================================================================================================//
+    
+            void problemaInterLi2(){
+              u8g.drawStr(5,0,"Estimar el Ln4 mediante");
+              u8g.drawStr(5,8,"interpolacion Lineal");
+              u8g.drawStr(5,18,"A)0.082294658");
+              u8g.drawStr(5,28,"B)0.082286693");
+            }
+            //==========================================PROBLEMA NUMRO (1.2)1===============================================================================//
+                void NewtonAdelante(){
+                  u8g.drawStr(0,0,"Es aquel metodo que ocupa tablas");
+                  u8g.drawStr(0,16,"de coeficcionetes hacia adel ");
+                     u8g.drawStr(0,26,"y coedicientes binomiales");         
+                             u8g.drawStr(5,45,"a)Ecuaciones no lineales");
+                              u8g.drawStr(5,55,"b)Newton hacia adelante");
+                       
+                  }
+    //==========================================PROBLEMA NUMRO (1.2)2===============================================================================//
+                void NewtonAdelante2(){
+                  u8g.drawStr(0,0,"Obtener g(x) para x3Obtener");
+                  u8g.drawStr(5,6,"     xi  yi");
+                     u8g.drawStr(5,16,"X1  1.7 0.35");
+                     u8g.drawStr(5,26,"X2  2.4 0.87");
+                      u8g.drawStr(5,35,"X3  3.1 1.03");
+                             u8g.drawStr(5,45,"a)1.02918423336");
+                              u8g.drawStr(5,55,"b)1.029183673");
+                       
+                  }
+              //==========================================Problema NUMERO (1.3)1===============================================================================//
+                        void NewtonAtras(){
+                        u8g.drawStr(0,0,"Requiere que los intervalos sean uniformes");
+                        u8g.drawStr(5,10,"y que no exista mucha discrepancia en sus valores");
+                      
+                       
+                                   u8g.drawStr(5,35,"a)Newton hacia Adelante");
+                                    u8g.drawStr(5,45,"b)Newton hacia Atras");
+                        }
+             //==========================================Problema NUMERO (1.3)2===============================================================================//
+                      void NewtonAtras2(){
+                        u8g.drawStr(0,0,"Obtener g(x) para x=3");
+                        u8g.drawStr(5,6,"     xi  yi");
+                           u8g.drawStr(5,16,"X1  1.7 0.35");
+                           u8g.drawStr(5,26,"X2  2.4 0.87");
+                            u8g.drawStr(5,35,"X3  3.1 1.03");
+                                   u8g.drawStr(5,45,"a)1.02918423336");
+                                    u8g.drawStr(5,55,"b)1.029183673");
+                        }
+             
+                //==========================================Problema NUMERO  (1.4)1============================================================================//
+            
+                        void NewtonDif(){
+                          u8g.drawStr(0,0,"Se aplica este método cuando ");
+                          u8g.drawStr(5,6,"los intervalos no son uniformes");
+                           
+                            
+                              u8g.drawStr(5,35,"a)Newton hacia Adelante.");
+                                     u8g.drawStr(5,45,"b) Newton diferencias Divididas.");
+                                     
+                               
+                          }
+             //==========================================Problema NUMERO  (1.4)2============================================================================//
+            
+                        void NewtonDif2(){
+                          u8g.drawStr(0,0,"Encuentre g(x) para x= 7");
+                          u8g.drawStr(5,6,"     xi  yi");
+                             u8g.drawStr(5,16,"X1  7.3 -0.28");
+                             u8g.drawStr(5,26,"X2  6.5 -1.35");
+                              u8g.drawStr(5,35,"X3  6.1 -1.96");
+                                     u8g.drawStr(5,45,"a)-.657813");
+                                      u8g.drawStr(5,55,"Los intervalos son no uniformes");
+                               
+                          }
+                            
+            //==========================================Problema NUMERO (1.5)1==================================================//
+    
+                          void Lagrange(){
+                            u8g.drawStr(0,0,"Se aplica para intervalos ");
+                            u8g.drawStr(5,6,"uniformes y no uniformes");
+                             u8g.drawStr(5,45,"a)Interpolación Lineal.");
+                            u8g.drawStr(5,55,"b)Lagrange");
+                          }
+           //==========================================Problema NUMERO (1.5)2==================================================//
+    
+                          void Lagrange2(){
+                            u8g.drawStr(0,0,"Encuentre g(x) para x= 7");
+                            u8g.drawStr(5,6,"     xi  yi");
+                               u8g.drawStr(5,16,"X1  7.3 -0.28");
+                               u8g.drawStr(5,26,"X2  6.5 -1.35");
+                                u8g.drawStr(5,35,"X3  6.1 -1.96");
+                                       u8g.drawStr(5,45,"a)-.657813");
+                                        u8g.drawStr(5,55,"Los intervalos son no uniformes");
+                          }
+        //==========================================SECCION NUMERO 2(SOLUCCION DE ECUACIONES NO LINEALES)==========================================================================//
+        
+          //==========================================Problema NUMERO (2.1)1========================================================================================================//
+                            void Grafico(){
+                            u8g.drawStr(0,0,"Es aquel metodo que consosye  en");
+                            u8g.drawStr(5,6," observar donde cruza el eje: x");
+                               u8g.drawStr(5,16,"a) Bisectriz.");
+                               u8g.drawStr(5,26,"b)Grafico.");
+                                
+                          }
+     //==========================================Problema NUMERO (2.1)2========================================================================================================//
+                          void Grafico2(){
+                            u8g.drawStr(0,0,"Que representa el valor f(x)=0 ");
+                            u8g.drawStr(5,6," en el método de Grafico");
+                               u8g.drawStr(5,16,"a)Aproximacon a la raiz.");
+                               u8g.drawStr(5,26,"b)Tangente de este.");
+                                
+                          }
+     
+      //==========================================Problema NUMERO (2.2)1========================================================================================================//
+                               void Bisectriz(){
+                            u8g.drawStr(0,0,"Es aquel conocido como corte binario:");
+                          
+                               u8g.drawStr(5,16,"a)Bisectriz.");
+                               u8g.drawStr(5,26,"b)Raphoson.");
+                                
+                          }
+  
+      
+       //==========================================Problema NUMERO (2.2)2========================================================================================================//
+                         void Bisectriz2(){
+                            u8g.drawStr(0,0,"Es el margen de error que maneja");
+                            u8g.drawStr(5,6," el metodo de bisectriz");
+                               u8g.drawStr(5,26,"a)0.00001.");
+                               u8g.drawStr(5,36,"b)0.001.");
+                                
+                          }
+        
+        //==========================================Problema NUMERO (2.3)1========================================================================================================//
+                        void PuntoFijo1(){
+                            u8g.drawStr(0,0,"Localizar la raiz de");
+                            u8g.drawStr(0,8,"f(x)=e^-x");
+                            u8g.drawStr(0,16,"xi+1=e^-xi");
+                            u8g.drawStr(0,24,"Valor inicial x0=0");
+                            u8g.drawStr(5,32,"a)0.567556637");
+                            u8g.drawStr(5,40,"b)0.566414733");
+                          }
+         //==========================================Problema NUMERO (2.3)2========================================================================================================//
+                        void PuntoFijo2(){
+                            u8g.drawStr(0,0,"Localizar la raiz de");
+                            u8g.drawStr(0,8,"f(x)=2x^2 -6x -2");
+                            u8g.drawStr(0,16,"xi+1=2x^2-2/6");
+                            u8g.drawStr(0,24,"Valor inicial x0=0");
+                            u8g.drawStr(5,32,"a)-0.302777787");
+                            u8g.drawStr(5,40,"b)-0.302775203");//RESPUESTA CORRECTA
+                          }
+         //==========================================Problema NUMERO (2.4)1========================================================================================================//      
+                        void NewtonRaphson1(){
+                             u8g.drawStr(0,0,"Encuentre la raiz real de");
+                             u8g.drawStr(0,8,"f(x)=x^3+2^2+10x-20");
+                             u8g.drawStr(0,16,"f'(x)=3x^2+4x+10");
+                             u8g.drawStr(0,24,"x0=1");
+                             u8g.drawStr(5,32,"a)1.368808108");//RESPUESTA CORRECTA
+                             u8g.drawStr(0,40,"b)1.355880188");
+                        }
+         //==========================================Problema NUMERO (2.4)2========================================================================================================//
+                        void NewtonRaphson2(){
+                             u8g.drawStr(0,0,"Encuentre la raiz real de");
+                             u8g.drawStr(0,8,"f(x)=2x^2-6x-2");
+                             u8g.drawStr(0,16,"f'(x)=3x-6");
+                             u8g.drawStr(0,24,"x0=0");
+                             u8g.drawStr(5,32,"a)-0.302775637");//RESPUESTA CORRECTA
+                             u8g.drawStr(0,40,"b)-0.332888999");
+                        }
+         //==========================================Problema NUMERO (2.5)1========================================================================================================//
+                        void FalsaPosicion1(){
+                             u8g.drawStr(0,0,"Encuentre la raiz para");
+                             u8g.drawStr(0,8,"f(x)=3x^3-2x-3");
+                             u8g.drawStr(0,16,"x      f(x)");
+                             u8g.drawStr(0,24,"-2     -23");
+                             u8g.drawStr(0,32,"-1     -4");
+                             u8g.drawStr(0,40,"0      -3");
+                             u8g.drawStr(0,48,"a=1     -2=f(a)");
+                             u8g.drawStr(0,56,"b=2     17=f(b)");
+                             u8g.drawStr(0,64,"a)1.278970157 b)1.277809987");//RESPUESTA CORRECTA a)
+                        }
+         //==========================================Problema NUMERO (2.5)2========================================================================================================//
+                        void FalsaPosicion2(){
+                             u8g.drawStr(0,0,"Encuentre la raiz para");
+                             u8g.drawStr(0,8,"f(x)=2x^2-6x-2");
+                             u8g.drawStr(0,16,"x      f(x)");
+                             u8g.drawStr(0,24,"-2     18");
+                             u8g.drawStr(0,32,"a=-1     6=f(a)");
+                             u8g.drawStr(0,40,"b=0      -2=f(b)");
+                             u8g.drawStr(0,48,"1     -6");
+                             u8g.drawStr(0,56,"2     -6");
+                             u8g.drawStr(0,64,"a)-0.202045099 b)-0.302771855");//RESPUESTA CORRECTA b)
+                        }
+          //==========================================Problema NUMERO (2.6)1========================================================================================================//
+                        void Secante1(){
+                          u8g.drawStr(0,0,"Calcule la raiz de");
+                          u8g.drawStr(0,8,"f(x) = e^-x -x");
+                          u8g.drawStr(0,16,"x0=0 y x1=1");
+                          u8g.drawStr(0,24,"a)0.567143306");// RESPUESTA CORRECTA 
+                          u8g.drawStr(0,32,"b)0.555789989");
+                        }
+          //==========================================Problema NUMERO (2.6)1========================================================================================================//
+                      void Secante2(){
+                        u8g.drawStr(0,0,"Calcule la raiz de");
+                        u8g.drawStr(0,8,"f(x)=2x^2-6x-2");
+                        u8g.drawStr(0,16,"x0=-1 y x1=0");
+                        u8g.drawStr(0,24,"a)=-0.302776221");
+                        u8g.drawStr(0,32,"b)=-0.302897722");
+          }
+    //==========================================================UNIDAD NUMERO 2===================================================================================================//
+    void menuUnidadTematica2(){
+      u8g.drawStr(5,0,"1)Montante");
+      u8g.drawStr(5,10,"2)Gauss-Jordan");
+      u8g.drawStr(5,20,"3)Eliminacion Gaussiana");
+      u8g.drawStr(5,30,"4)Gauss-Sedel");
+      u8g.drawStr(5,40,"5)Jacobi");
+      u8g.drawStr(5,50,"6)Raices de Polinomios");
+    
+    }
+    //==========================================SECCION NUMERO 3(SOLUCCION DE ECUACIONES  LINEALES)===============================================================================//
+      //==========================================================UNIDAD NUMERO 2===================================================================================================//
+    void Montante(){
+      u8g.drawStr(5,0,"1)Ejemplo");
+      u8g.drawStr(5,10,"2)Montante");
+      
+    
+    }
+    //==========================================SECCION NUMERO 4(MINIMOS CUADRADOS)===============================================================================================//
+    //==========================================================UNIDAD NUMERO 3===================================================================================================//
+    void menuUnidadTematica3(){
+      u8g.drawStr(5,0,"1)Regla Trapezoidal");
+      u8g.drawStr(5,10,"2)Newton-Cotes Cerrada");
+      u8g.drawStr(5,20,"3)Newton-cotes Abierta");
+      u8g.drawStr(5,30,"4)Tablas de constantes");
+       u8g.drawStr(5,40,"Paralas formulas Cerradas");
+     u8g.drawStr(5,50,"y abiertas de Newtom-Cotes");
+    }
+    //==========================================SECCION NUMERO 5(INTEGRACCIÓN)====================================================================================================//
+    
+    //==========================================================UNIDAD NUMERO 4===================================================================================================//
+    void menuUnidadTematica4(){
+      u8g.drawStr(5,0,"1)Euler");
+      u8g.drawStr(5,10,"2)Hacia Adelante");
+      u8g.drawStr(5,20,"3)Hacia Atras");
+      u8g.drawStr(5,30,"4)Modificado");
+       u8g.drawStr(5,40,"5)Runge-Kutta");
+     u8g.drawStr(5,50,"6)2do orden ");
+    }
+    //==========================================SECCION NUMERO 6(ECUACIONES DIFERENCIALES ORDINARIAS )===========================================================================//
+    
+    
+       //==========================================================VERDADERO===================================================================================================//
+    void Verdadero(){
+      u8g.drawStr(20,0,"!!FELICIDADES");
+      u8g.drawStr(40,10," SU ");
+      u8g.drawStr(30,20,"RESPUESTA");
+      u8g.drawStr(40,30,"ES");
+       u8g.drawStr(300,40,"CORRECTA!!");
+    
+    }
+      //==========================================================FALSO===================================================================================================//
+    void Falso(){
+      u8g.drawStr(20,0,"ESTUDIA ");
+      u8g.drawStr(20,10," MAS  ");
+      u8g.drawStr(20,20,"Y NO");
+      u8g.drawStr(20,30,"DEJES DE ");
+       u8g.drawStr(20,40,"INTENTARLO");
+    
+    }
